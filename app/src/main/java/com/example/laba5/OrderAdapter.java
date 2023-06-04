@@ -63,11 +63,11 @@ public class OrderAdapter extends BaseAdapter {
 
         Order order = getOrder(position);
 
-        checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-
+        checkBox.setOnCheckedChangeListener((buttonView, isChecked) ->
+        {
             isCourierAvailable = false;
             Package pack = ((Order) getItem(position)).getPack();
-            if (pack instanceof BigPackage && courier.hasAbility(CourierAbility.CAR_DELIVERY )) {
+            if (pack instanceof BigPackage && courier.hasAbility(CourierAbility.CAR_DELIVERY)) {
                 isCourierAvailable = true;
             } else if (pack instanceof DocPackage && courier.hasAbility(CourierAbility.DOCUMENT_DELIVERY)) {
                 isCourierAvailable = true;
@@ -79,8 +79,11 @@ public class OrderAdapter extends BaseAdapter {
 
             if (isCourierAvailable && isChecked) {
                 order.setSelected(true);
-            } else {
+            } else if (!isCourierAvailable && isChecked) {
                 checkBox.setChecked(false);
+                order.setSelected(false);
+                Toast.makeText(layoutInflater.getContext(), "Нельзя выбрать", Toast.LENGTH_SHORT).show();
+            } else if (!isChecked) {
                 order.setSelected(false);
             }
             notifyDataSetChanged();
